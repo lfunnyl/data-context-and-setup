@@ -1,29 +1,31 @@
-from pathlib import Path
 import pandas as pd
-
+from pathlib import Path
 
 class Olist:
-    """
-    The Olist class provides methods to interact with Olist's e-commerce data.
-
-    Methods:
-        get_data():
-            Loads and returns a dictionary where keys are dataset names (e.g., 'sellers', 'orders')
-            and values are pandas DataFrames loaded from corresponding CSV files.
-
-        ping():
-            Prints "pong" to confirm the method is callable.
-    """
     def get_data(self):
         """
-        This function returns a Python dict.
-        Its keys should be 'sellers', 'orders', 'order_items' etc...
-        Its values should be pandas.DataFrames loaded from csv files
+        Bu metod, csv dizinindeki tüm verileri okur ve temizlenmiş 
+        anahtarlarla bir sözlük (dict) olarak döndürür.
         """
-        pass  # YOUR CODE HERE
+        # 1. CSV yolunu tanımla
+        csv_path = Path("~/.workintech/olist/data/csv").expanduser()
+        
+        # 2. Klasördeki tüm dosyaları listele
+        file_paths = list(csv_path.iterdir())
+        
+        data = {}
+        
+        for path in file_paths:
+            # Sadece .csv dosyalarını işle
+            if path.suffix == '.csv':
+                # Anahtar ismini temizle: olist_sellers_dataset.csv -> sellers
+                key = path.name.replace('olist_', '').replace('_dataset.csv', '').replace('.csv', '')
+                
+                # DataFrame'i yükle ve sözlüğe ekle
+                data[key] = pd.read_csv(path)
+        
+        # EN ÖNEMLİ KISIM: Sözlüğü döndür
+        return data
 
     def ping(self):
-        """
-        You call ping I print pong.
-        """
-        print("pong")
+        return "pong"
